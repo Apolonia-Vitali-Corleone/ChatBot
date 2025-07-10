@@ -3,7 +3,13 @@
 Switch to the frontend directory.Open the cmd and input:
 
 ```
-npm start
+npm install
+```
+
+then start the project:
+
+```
+npm 
 ```
 
 then the frontend will launch.
