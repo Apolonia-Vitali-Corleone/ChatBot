@@ -49,6 +49,7 @@ function UseState() {
                     <input
                         type="text"
                         value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
 
                         placeholder="添加新项..."
                         className="flex-1 border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
