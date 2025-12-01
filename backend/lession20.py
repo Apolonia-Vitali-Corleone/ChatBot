@@ -18,8 +18,8 @@ import os
 from dotenv import load_dotenv
 
 # 设置代理
-os.environ['http_proxy'] = "127.0.0.1:4343"
-os.environ['https_proxy'] = "127.0.0.1:4343"
+# os.environ['http_proxy'] = os.getenv("HTTP_PROXY")
+# os.environ['https_proxy'] = os.getenv("HTTPS_PROXY")
 
 load_dotenv()
 
@@ -59,16 +59,31 @@ def generate_time_based_uuid():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    data = request.get_json()
-    user_input = data.get('input')
-    session_id = data.get('session_id')
+    try:
+        data = request.get_json()
+        if not data or 'input' not in data:
+            return jsonify({"error": "Missing input"}), 400
 
-    response = conv_chain.invoke(
-        {"input": user_input},
-        config={"configurable": {"session_id": session_id}}
-    )
+        user_input = data.get('input')
+        session_id = data.get('session_id') or generate_time_based_uuid()
 
-    return jsonify({"response": response.content})
+        if not user_input.strip():
+            return jsonify({"error": "Empty input"}), 400
+
+        response = conv_chain.invoke(
+            {"input": user_input},
+            config={"configurable": {"session_id": session_id}}
+        )
+
+        return jsonify({"response": response.content, "session_id": session_id})
+    except Exception as e:
+        app.logger.error(f"Chat error: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy", "timestamp": time.time()})
 
 
 if __name__ == '__main__':
