@@ -28,4 +28,4 @@ Install Python and run the script.
 
 # Example
 
-![image-20250710235853180](./README.assets/image-20250710235853180.png)
+![image-20250710235853180](./assets/image-20250710235853180.png)
